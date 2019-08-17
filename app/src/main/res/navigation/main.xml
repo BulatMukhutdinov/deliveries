@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    app:startDestination="@id/list">
+
+    <fragment
+        android:id="@+id/list"
+        android:name="tat.mukhutdinov.deliveries.deliverylist.ui.DeliveryListViewModel"
+        android:label="List"
+        tools:layout="@layout/delivery_list">
+
+        <action
+            android:id="@+id/toDetails"
+            app:destination="@id/delivery"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/delivery"
+        android:name="tat.mukhutdinov.deliveries.delivery.ui.DeliveryViewModel"
+        android:label="Details"
+        tools:layout="@layout/delivery">
+
+        <argument
+            android:name="delivery"
+            app:argType="tat.mukhutdinov.deliveries.delivery.domain.model.Delivery" />
+    </fragment>
+</navigation>

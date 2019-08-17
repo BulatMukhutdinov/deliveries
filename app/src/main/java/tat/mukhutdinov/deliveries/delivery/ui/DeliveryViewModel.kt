@@ -2,8 +2,6 @@ package tat.mukhutdinov.deliveries.delivery.ui
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.ViewCompat
-import androidx.core.view.doOnPreDraw
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.transition.TransitionInflater
@@ -32,8 +30,6 @@ class DeliveryViewModel : BaseViewModel<DeliveryBindings, DeliveryBinding>(), De
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        ViewCompat.setTransitionName(viewBinding.image, args.delivery.id.toString())
 
         viewBinding.delivery = args.delivery
 

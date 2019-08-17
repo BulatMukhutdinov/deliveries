@@ -33,6 +33,7 @@
             android:layout_marginStart="16dp"
             android:background="@drawable/rounded_background"
             android:scaleType="centerCrop"
+            android:transitionName="@{Integer.toString(delivery.id)}"
             app:image="@{delivery.image}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

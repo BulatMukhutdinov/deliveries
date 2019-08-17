@@ -44,11 +44,8 @@ class DeliveryListViewModel : BaseViewModel<DeliveryListBindings, DeliveryListBi
     private fun setupList() {
         val adapter = DeliveriesAdapter(this, this)
 
-        viewBinding.deliveries.apply {
-            this.adapter = adapter
-            layoutManager = LinearLayoutManager(context)
-            setHasFixedSize(true)
-        }
+        viewBinding.deliveries.adapter = adapter
+        viewBinding.deliveries.setHasFixedSize(true)
 
         listing.pagedList.observe(viewLifecycleOwner, Observer {
             adapter.submitList(it)
@@ -85,15 +82,10 @@ class DeliveryListViewModel : BaseViewModel<DeliveryListBindings, DeliveryListBi
     }
 
     override fun onDeliveryClicked(delivery: Delivery, image: ImageView) {
-        val extras = FragmentNavigatorExtras(image to image.transitionName)
-        val direction = DeliveryListViewModelDirections.toDetails(delivery)
+        val extras = FragmentNavigatorExtras(image to delivery.id.toString())
 
-        view?.findNavController()?.navigate(
-            direction.actionId,
-            direction.arguments,
-            null,
-            extras //https://github.com/googlesamples/android-architecture-components/issues/495
-        )
+        //https://github.com/googlesamples/android-architecture-components/issues/495
+        view?.findNavController()?.navigate(DeliveryListViewModelDirections.toDetails(delivery), extras)
     }
 
     override fun onRetryClicked() {

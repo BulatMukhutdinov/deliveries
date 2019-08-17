@@ -2,7 +2,6 @@ package tat.mukhutdinov.deliveries.deliverylist.ui.adapter.viewholder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import com.squareup.picasso.Picasso
 import tat.mukhutdinov.deliveries.R
@@ -18,8 +17,6 @@ class DeliveryViewHolder(
 
     override fun bindTo(delivery: Delivery?) {
         if (delivery == null) return
-
-        ViewCompat.setTransitionName(viewDataBinding.image, delivery.id.toString())
 
         viewDataBinding.delivery = delivery
         viewDataBinding.image.clipToOutline = true

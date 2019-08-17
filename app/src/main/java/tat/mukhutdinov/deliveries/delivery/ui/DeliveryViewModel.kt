@@ -2,8 +2,11 @@ package tat.mukhutdinov.deliveries.delivery.ui
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.ViewCompat
+import androidx.core.view.doOnPreDraw
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.transition.TransitionInflater
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -22,8 +25,16 @@ class DeliveryViewModel : BaseViewModel<DeliveryBindings, DeliveryBinding>(), De
 
     private val args: DeliveryViewModelArgs by navArgs()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        ViewCompat.setTransitionName(viewBinding.image, args.delivery.id.toString())
+
         viewBinding.delivery = args.delivery
 
         viewBinding.image.clipToOutline = true
@@ -34,6 +45,7 @@ class DeliveryViewModel : BaseViewModel<DeliveryBindings, DeliveryBinding>(), De
 
     override fun onMapReady(googleMap: GoogleMap) {
         val marker = LatLng(args.delivery.lat, args.delivery.lng)
+
         googleMap.addMarker(MarkerOptions()
             .position(marker)
             .title(args.delivery.address))

@@ -22,8 +22,8 @@
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
+        android:onClick="@{() -> bindings.onDeliveryClicked(delivery, image)}"
         android:paddingTop="8dp"
-        android:onClick="@{() -> bindings.onDeliveryClicked(delivery)}"
         android:paddingBottom="8dp">
 
         <ImageView

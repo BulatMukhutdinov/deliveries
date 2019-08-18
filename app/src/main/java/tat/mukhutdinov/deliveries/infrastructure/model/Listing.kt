@@ -5,8 +5,8 @@ import androidx.paging.PagedList
 
 data class Listing<T>(
     val pagedList: LiveData<PagedList<T>>,
-    val networkState: LiveData<NetworkState>,
-    val refreshState: LiveData<NetworkState>,
+    val dataState: LiveData<DataState>,
+    val refreshState: LiveData<DataState>,
     val refresh: () -> Unit,
     val retry: () -> Unit
 )

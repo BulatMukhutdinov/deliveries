@@ -17,7 +17,7 @@ import tat.mukhutdinov.deliveries.delivery.gateway.converter.DeliveryConverter
 import tat.mukhutdinov.deliveries.delivery.gateway.model.DeliveryResponse
 import tat.mukhutdinov.deliveries.infrastructure.db.DataBase
 import tat.mukhutdinov.deliveries.infrastructure.model.Listing
-import tat.mukhutdinov.deliveries.infrastructure.model.NetworkState
+import tat.mukhutdinov.deliveries.infrastructure.model.DataState
 import tat.mukhutdinov.deliveries.infrastructure.util.exceptionHandler
 import timber.log.Timber
 
@@ -55,7 +55,7 @@ class DeliveryBoundGateway(
 
         return Listing(
             pagedList = deliveries,
-            networkState = boundaryCallback.networkState,
+            dataState = boundaryCallback.dataState,
             retry = { boundaryCallback.helper.retryAllFailed() },
             refresh = { refreshTrigger.value = null },
             refreshState = refreshState
@@ -70,11 +70,11 @@ class DeliveryBoundGateway(
      * updated after the database transaction is finished.
      */
     @MainThread
-    private fun refresh(): LiveData<NetworkState> {
+    private fun refresh(): LiveData<DataState> {
         boundaryCallback.refresh()
 
-        val networkState = MutableLiveData<NetworkState>()
-        networkState.value = NetworkState.Loading
+        val dataState = MutableLiveData<DataState>()
+        dataState.value = DataState.Loading
 
         coroutineScope.launch(exceptionHandler) {
             try {
@@ -85,14 +85,14 @@ class DeliveryBoundGateway(
                     insertIntoDatabase(deliveries)
                 }
 
-                networkState.postValue(NetworkState.Loaded)
+                dataState.postValue(DataState.Loaded)
             } catch (throwable: Throwable) {
                 Timber.w(throwable)
-                networkState.postValue(NetworkState.Error(throwable.message))
+                dataState.postValue(DataState.Error(throwable.message))
             }
         }
 
-        return networkState
+        return dataState
     }
 
     private suspend fun insertIntoDatabase(deliveries: List<DeliveryResponse>) {

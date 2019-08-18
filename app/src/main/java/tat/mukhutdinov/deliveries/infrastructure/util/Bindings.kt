@@ -6,7 +6,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.squareup.picasso.Picasso
 import tat.mukhutdinov.deliveries.R
-import tat.mukhutdinov.deliveries.infrastructure.model.NetworkState
+import tat.mukhutdinov.deliveries.infrastructure.model.DataState
 
 @BindingAdapter("image")
 fun setImage(image: ImageView, url: String?) {
@@ -20,11 +20,11 @@ fun setImage(image: ImageView, url: String?) {
     }
 }
 
-@BindingAdapter("networkError")
-fun setNetworkError(text: TextView, state: NetworkState) {
+@BindingAdapter("error")
+fun setError(text: TextView, state: DataState) {
     text.text = when (state) {
-        is NetworkState.Error -> state.message.orEmpty()
-        NetworkState.Loaded -> ""
+        is DataState.Error -> state.message.orEmpty()
+        DataState.Loaded -> ""
         else -> text.text
     }
 }

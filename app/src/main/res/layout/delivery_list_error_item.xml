@@ -8,9 +8,9 @@
 
         <variable
             name="bindings"
-            type="tat.mukhutdinov.deliveries.deliverylist.ui.adapter.DeliveryListNetworkErrorBindings" />
+            type="tat.mukhutdinov.deliveries.deliverylist.ui.adapter.DeliveryListErrorBindings" />
 
-        <import type="tat.mukhutdinov.deliveries.infrastructure.model.NetworkState" />
+        <import type="tat.mukhutdinov.deliveries.infrastructure.model.DataState" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,7 +30,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:networkError="@{bindings.networkState}"
+            app:error="@{bindings.dataState}"
             tools:text="Unable to reach host. Check your connection status" />
 
         <com.google.android.material.button.MaterialButton
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:enabled="@{bindings.networkState != NetworkState.Loading.INSTANCE}"
+            android:enabled="@{bindings.dataState != DataState.Loading.INSTANCE}"
             android:onClick="@{() -> bindings.onRetryClicked()}"
             android:text="@string/retry"
             android:textSize="14sp"

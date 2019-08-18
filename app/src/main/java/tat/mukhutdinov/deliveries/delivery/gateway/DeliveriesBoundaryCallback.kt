@@ -11,7 +11,7 @@ import tat.mukhutdinov.deliveries.delivery.domain.model.Delivery
 import tat.mukhutdinov.deliveries.delivery.gateway.DeliveryBoundGateway.Companion.PAGE_SIZE
 import tat.mukhutdinov.deliveries.delivery.gateway.api.DeliveriesApi
 import tat.mukhutdinov.deliveries.delivery.gateway.model.DeliveryResponse
-import tat.mukhutdinov.deliveries.infrastructure.model.NetworkState
+import tat.mukhutdinov.deliveries.infrastructure.model.DataState
 import tat.mukhutdinov.deliveries.infrastructure.util.exceptionHandler
 import timber.log.Timber
 import java.util.concurrent.Executors
@@ -24,7 +24,7 @@ class DeliveriesBoundaryCallback(
 
     val helper = PagingRequestHelper(Executors.newSingleThreadExecutor())
 
-    val networkState = helper.createStatusLiveData()
+    val dataState = helper.createStatusLiveData()
 
     private var page = 0
 
@@ -70,14 +70,14 @@ class DeliveriesBoundaryCallback(
         page = 0
     }
 
-    private fun PagingRequestHelper.createStatusLiveData(): LiveData<NetworkState> {
-        val liveData = MutableLiveData<NetworkState>()
+    private fun PagingRequestHelper.createStatusLiveData(): LiveData<DataState> {
+        val liveData = MutableLiveData<DataState>()
 
         addListener { report ->
             when {
-                report.hasRunning() -> liveData.postValue(NetworkState.Loading)
-                report.hasError() -> liveData.postValue(NetworkState.Error(getErrorMessage(report)))
-                else -> liveData.postValue(NetworkState.Loaded)
+                report.hasRunning() -> liveData.postValue(DataState.Loading)
+                report.hasError() -> liveData.postValue(DataState.Error(getErrorMessage(report)))
+                else -> liveData.postValue(DataState.Loaded)
             }
         }
 

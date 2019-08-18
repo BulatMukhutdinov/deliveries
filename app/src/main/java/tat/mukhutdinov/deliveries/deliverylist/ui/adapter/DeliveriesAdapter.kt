@@ -5,23 +5,23 @@ import androidx.paging.PagedListAdapter
 import tat.mukhutdinov.deliveries.R
 import tat.mukhutdinov.deliveries.delivery.domain.model.Delivery
 import tat.mukhutdinov.deliveries.deliverylist.ui.adapter.viewholder.DeliveryLoadingViewHolder
-import tat.mukhutdinov.deliveries.deliverylist.ui.adapter.viewholder.DeliveryNetworkErrorViewHolder
+import tat.mukhutdinov.deliveries.deliverylist.ui.adapter.viewholder.DeliveryErrorViewHolder
 import tat.mukhutdinov.deliveries.deliverylist.ui.adapter.viewholder.DeliveryViewHolder
-import tat.mukhutdinov.deliveries.infrastructure.model.NetworkState
+import tat.mukhutdinov.deliveries.infrastructure.model.DataState
 import tat.mukhutdinov.deliveries.infrastructure.model.Status
 import tat.mukhutdinov.deliveries.infrastructure.ui.adapter.BaseViewHolder
 
 class DeliveriesAdapter(
     private val deliveryListItemBindings: DeliveryListItemBindings,
-    private val deliveryListNetworkErrorBindings: DeliveryListNetworkErrorBindings
+    private val deliveryListNetworkErrorBindings: DeliveryListErrorBindings
 ) : PagedListAdapter<Delivery, BaseViewHolder<*, *>>(DeliveryDiffUtilItemCallback()) {
 
-    private var networkState: NetworkState = NetworkState.Loaded
+    private var dataState: DataState = DataState.Loaded
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*, *> =
         when (viewType) {
             R.layout.delivery_list_item -> DeliveryViewHolder.create(parent, deliveryListItemBindings)
-            R.layout.delivery_list_error_item -> DeliveryNetworkErrorViewHolder.create(parent, deliveryListNetworkErrorBindings)
+            R.layout.delivery_list_error_item -> DeliveryErrorViewHolder.create(parent, deliveryListNetworkErrorBindings)
             R.layout.delivery_list_loading_item -> DeliveryLoadingViewHolder.create(parent)
             else -> throw IllegalArgumentException("unknown view type $viewType")
         }
@@ -29,14 +29,14 @@ class DeliveriesAdapter(
     override fun onBindViewHolder(holder: BaseViewHolder<*, *>, position: Int) {
         when (getItemViewType(position)) {
             R.layout.delivery_list_item -> (holder as DeliveryViewHolder).bindTo(getItem(position))
-            R.layout.delivery_list_error_item -> (holder as DeliveryNetworkErrorViewHolder).bindTo()
+            R.layout.delivery_list_error_item -> (holder as DeliveryErrorViewHolder).bindTo()
             R.layout.delivery_list_loading_item -> (holder as DeliveryLoadingViewHolder).bindTo()
         }
     }
 
     override fun getItemViewType(position: Int): Int =
         if (position == itemCount - 1) {
-            when (networkState.status) {
+            when (dataState.status) {
                 Status.FAILED -> R.layout.delivery_list_error_item
                 Status.RUNNING -> R.layout.delivery_list_loading_item
                 Status.SUCCESS -> R.layout.delivery_list_item
@@ -45,10 +45,10 @@ class DeliveriesAdapter(
             R.layout.delivery_list_item
         }
 
-    fun updateNetworkState(newNetworkState: NetworkState) {
-        val previousState = this.networkState
+    fun updateDataState(newDataState: DataState) {
+        val previousState = this.dataState
         val hadExtraRow = hasExtraRow()
-        this.networkState = newNetworkState
+        this.dataState = newDataState
         val hasExtraRow = hasExtraRow()
 
         if (hadExtraRow != hasExtraRow) {
@@ -57,13 +57,13 @@ class DeliveriesAdapter(
             } else {
                 notifyItemInserted(super.getItemCount())
             }
-        } else if (hasExtraRow && previousState != newNetworkState) {
+        } else if (hasExtraRow && previousState != newDataState) {
             notifyItemChanged(itemCount - 1)
         }
     }
 
     private fun hasExtraRow() =
-        networkState.status != Status.SUCCESS
+        dataState.status != Status.SUCCESS
 
     override fun getItemCount(): Int {
         return super.getItemCount() + if (hasExtraRow()) 1 else 0

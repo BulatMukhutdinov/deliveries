@@ -5,22 +5,21 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import tat.mukhutdinov.deliveries.R
 import tat.mukhutdinov.deliveries.databinding.DeliveryListErrorItemBinding
-import tat.mukhutdinov.deliveries.delivery.domain.model.Delivery
-import tat.mukhutdinov.deliveries.deliverylist.ui.adapter.DeliveryListNetworkErrorBindings
+import tat.mukhutdinov.deliveries.deliverylist.ui.adapter.DeliveryListErrorBindings
 import tat.mukhutdinov.deliveries.infrastructure.ui.adapter.BaseViewHolder
 
-class DeliveryNetworkErrorViewHolder(
+class DeliveryErrorViewHolder(
     viewDataBinding: DeliveryListErrorItemBinding,
-    bindings: DeliveryListNetworkErrorBindings
-) : BaseViewHolder<DeliveryListNetworkErrorBindings, DeliveryListErrorItemBinding>(viewDataBinding, bindings) {
+    bindings: DeliveryListErrorBindings
+) : BaseViewHolder<DeliveryListErrorBindings, DeliveryListErrorItemBinding>(viewDataBinding, bindings) {
 
     companion object {
 
-        fun create(parent: ViewGroup, bindings: DeliveryListNetworkErrorBindings): DeliveryNetworkErrorViewHolder {
+        fun create(parent: ViewGroup, bindings: DeliveryListErrorBindings): DeliveryErrorViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val viewDataBinding: DeliveryListErrorItemBinding = DataBindingUtil.inflate(layoutInflater, R.layout.delivery_list_error_item, parent, false)
 
-            return DeliveryNetworkErrorViewHolder(viewDataBinding, bindings)
+            return DeliveryErrorViewHolder(viewDataBinding, bindings)
         }
     }
 }

@@ -42,9 +42,11 @@ class DeliveryViewModel : BaseViewModel<DeliveryBindings, DeliveryBinding>(), De
     override fun onMapReady(googleMap: GoogleMap) {
         val marker = LatLng(args.delivery.lat, args.delivery.lng)
 
-        googleMap.addMarker(MarkerOptions()
-            .position(marker)
-            .title(args.delivery.address))
+        googleMap.addMarker(
+            MarkerOptions()
+                .position(marker)
+                .title(args.delivery.address)
+        )
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker, 15f))
     }

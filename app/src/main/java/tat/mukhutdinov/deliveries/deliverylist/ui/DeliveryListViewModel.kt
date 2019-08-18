@@ -3,6 +3,7 @@ package tat.mukhutdinov.deliveries.deliverylist.ui
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
@@ -35,7 +36,8 @@ class DeliveryListViewModel : BaseViewModel<DeliveryListBindings, DeliveryListBi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
         setupList()
 
         setupRefresh()

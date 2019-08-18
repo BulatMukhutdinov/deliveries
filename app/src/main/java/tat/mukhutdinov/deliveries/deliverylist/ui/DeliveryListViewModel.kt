@@ -2,9 +2,12 @@ package tat.mukhutdinov.deliveries.deliverylist.ui
 
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
+import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
@@ -33,7 +36,8 @@ class DeliveryListViewModel : BaseViewModel<DeliveryListBindings, DeliveryListBi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
         setupList()
 
         setupRefresh()
@@ -43,7 +47,6 @@ class DeliveryListViewModel : BaseViewModel<DeliveryListBindings, DeliveryListBi
         val adapter = DeliveriesAdapter(this, this)
 
         viewBinding.deliveries.adapter = adapter
-        viewBinding.deliveries.layoutManager = LinearLayoutManager(context)
         viewBinding.deliveries.setHasFixedSize(true)
 
         listing.pagedList.observe(viewLifecycleOwner, Observer {
@@ -80,8 +83,11 @@ class DeliveryListViewModel : BaseViewModel<DeliveryListBindings, DeliveryListBi
         })
     }
 
-    override fun onDeliveryClicked(delivery: Delivery) {
-        view?.findNavController()?.navigate(DeliveryListViewModelDirections.toDetails(delivery))
+    override fun onDeliveryClicked(delivery: Delivery, image: ImageView) {
+        val extras = FragmentNavigatorExtras(image to delivery.id.toString())
+
+        //https://github.com/googlesamples/android-architecture-components/issues/495
+        view?.findNavController()?.navigate(DeliveryListViewModelDirections.toDetails(delivery), extras)
     }
 
     override fun onRetryClicked() {

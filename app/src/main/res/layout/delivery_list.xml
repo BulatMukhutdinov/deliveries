@@ -46,6 +46,7 @@
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
                 android:paddingBottom="8dp"
+                app:layoutManager="LinearLayoutManager"
                 tools:listitem="@layout/delivery_list_item" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -22,8 +22,8 @@
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
+        android:onClick="@{() -> bindings.onDeliveryClicked(delivery, image)}"
         android:paddingTop="8dp"
-        android:onClick="@{() -> bindings.onDeliveryClicked(delivery)}"
         android:paddingBottom="8dp">
 
         <ImageView
@@ -33,6 +33,7 @@
             android:layout_marginStart="16dp"
             android:background="@drawable/rounded_background"
             android:scaleType="centerCrop"
+            android:transitionName="@{Integer.toString(delivery.id)}"
             app:image="@{delivery.image}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

@@ -13,8 +13,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import tat.mukhutdinov.deliveries.BR
+import tat.mukhutdinov.deliveries.infrastructure.util.exceptionHandler
 
-abstract class BaseViewModel<B : BaseBindings, V : ViewDataBinding> : Fragment(), CoroutineScope by CoroutineScope(Dispatchers.IO) {
+abstract class BaseViewModel<B : BaseBindings, V : ViewDataBinding> : Fragment(), CoroutineScope by CoroutineScope(Dispatchers.IO + exceptionHandler) {
 
     protected abstract val layoutId: Int
 

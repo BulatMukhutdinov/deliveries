@@ -12,7 +12,6 @@ import tat.mukhutdinov.deliveries.delivery.gateway.DeliveryBoundGateway.Companio
 import tat.mukhutdinov.deliveries.delivery.gateway.api.DeliveriesApi
 import tat.mukhutdinov.deliveries.delivery.gateway.model.DeliveryResponse
 import tat.mukhutdinov.deliveries.infrastructure.model.DataState
-import tat.mukhutdinov.deliveries.infrastructure.util.exceptionHandler
 import timber.log.Timber
 import java.util.concurrent.Executors
 
@@ -34,7 +33,7 @@ class DeliveriesBoundaryCallback(
     @MainThread
     override fun onZeroItemsLoaded() {
         helper.runIfNotRunning(PagingRequestHelper.RequestType.INITIAL) { pagingHelperCallback ->
-            coroutineScope.launch(exceptionHandler) {
+            coroutineScope.launch {
                 try {
                     val deliveries = api.getDeliveries(page, PAGE_SIZE)
                     handleResponse(deliveries)
@@ -53,7 +52,7 @@ class DeliveriesBoundaryCallback(
     @MainThread
     override fun onItemAtEndLoaded(itemAtEnd: Delivery) {
         helper.runIfNotRunning(PagingRequestHelper.RequestType.AFTER) { pagingHelperCallback ->
-            coroutineScope.launch(exceptionHandler) {
+            coroutineScope.launch {
                 try {
                     val deliveries = api.getDeliveries(++page * PAGE_SIZE, PAGE_SIZE)
                     handleResponse(deliveries)

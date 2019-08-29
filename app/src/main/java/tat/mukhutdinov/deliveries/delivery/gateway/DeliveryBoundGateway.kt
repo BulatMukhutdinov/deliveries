@@ -16,9 +16,8 @@ import tat.mukhutdinov.deliveries.delivery.gateway.api.DeliveriesApi
 import tat.mukhutdinov.deliveries.delivery.gateway.converter.DeliveryConverter
 import tat.mukhutdinov.deliveries.delivery.gateway.model.DeliveryResponse
 import tat.mukhutdinov.deliveries.infrastructure.db.DataBase
-import tat.mukhutdinov.deliveries.infrastructure.model.Listing
 import tat.mukhutdinov.deliveries.infrastructure.model.DataState
-import tat.mukhutdinov.deliveries.infrastructure.util.exceptionHandler
+import tat.mukhutdinov.deliveries.infrastructure.model.Listing
 import timber.log.Timber
 
 class DeliveryBoundGateway(
@@ -76,7 +75,7 @@ class DeliveryBoundGateway(
         val dataState = MutableLiveData<DataState>()
         dataState.value = DataState.Loading
 
-        coroutineScope.launch(exceptionHandler) {
+        coroutineScope.launch {
             try {
                 val deliveries = api.getDeliveries(0, PAGE_SIZE)
 

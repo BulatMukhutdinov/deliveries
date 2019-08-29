@@ -3,9 +3,12 @@ package tat.mukhutdinov.deliveries.deliverylist.ui
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.Transformations
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,8 +19,8 @@ import tat.mukhutdinov.deliveries.databinding.DeliveryListBinding
 import tat.mukhutdinov.deliveries.delivery.domain.model.Delivery
 import tat.mukhutdinov.deliveries.delivery.ui.boundary.DeliveryDomain
 import tat.mukhutdinov.deliveries.deliverylist.ui.adapter.DeliveriesAdapter
-import tat.mukhutdinov.deliveries.deliverylist.ui.adapter.DeliveryListItemBindings
 import tat.mukhutdinov.deliveries.deliverylist.ui.adapter.DeliveryListErrorBindings
+import tat.mukhutdinov.deliveries.deliverylist.ui.adapter.DeliveryListItemBindings
 import tat.mukhutdinov.deliveries.infrastructure.model.DataState
 import tat.mukhutdinov.deliveries.infrastructure.ui.BaseViewModel
 
@@ -30,9 +33,13 @@ class DeliveryListViewModel : BaseViewModel<DeliveryListBindings, DeliveryListBi
 
     private val deliveryDomain: DeliveryDomain by inject { parametersOf(this) }
 
-    override val dataState = MutableLiveData<DataState>(DataState.Loading)
-
     private val listing = deliveryDomain.getDeliveries()
+
+    override val dataState = listing.dataState
+
+    override val isRefreshing = Transformations.switchMap(listing.refreshState) {
+        MutableLiveData(it == DataState.Loading)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -56,8 +63,6 @@ class DeliveryListViewModel : BaseViewModel<DeliveryListBindings, DeliveryListBi
         })
 
         listing.dataState.observe(viewLifecycleOwner, Observer {
-            dataState.value = it
-
             adapter.updateDataState(it)
 
             if (it != DataState.Loaded && isLastItemVisible()) {
@@ -76,13 +81,15 @@ class DeliveryListViewModel : BaseViewModel<DeliveryListBindings, DeliveryListBi
     }
 
     private fun setupRefresh() {
-        viewBinding.refresh.setOnRefreshListener {
-            listing.refresh()
-        }
-
         listing.refreshState.observe(viewLifecycleOwner, Observer {
-            viewBinding.refresh.isRefreshing = it == DataState.Loading
+            if (it is DataState.Error) {
+                Toast.makeText(context, it.message, LENGTH_SHORT).show()
+            }
         })
+    }
+
+    override fun refresh() {
+        listing.refresh()
     }
 
     override fun onDeliveryClicked(delivery: Delivery, image: ImageView) {
